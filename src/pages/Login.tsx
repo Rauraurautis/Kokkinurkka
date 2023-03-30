@@ -23,9 +23,11 @@ const Login = () => {
                 setRefreshToken(data.refreshToken)
                 login(data.accessToken)
             } else {
-                toast.warn("Wrong password or username!")
+                toast.warn("Väärä käyttäjätunnus tai salasana!")
             }
-
+        },
+        onError: () => {
+            toast.warn("Virhe yhdistettäessä palvelimelle!")
         }
     })
 
@@ -51,7 +53,7 @@ const Login = () => {
                 <form onSubmit={(e) => loginHandler(e)} className="flex flex-col justify-center space-y-3 h-fit items-center text-center">
                     <input type="text" placeholder="Email" onChange={(e) => onChangeHandler(e)} className="bg-slate-800 text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5" name="email" />
                     <input type="password" placeholder="Password" onChange={(e) => onChangeHandler(e)} className="bg-slate-800 text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5" name="password" />
-                    <button type="submit" className="mt-4 bg-slate-600 text-white relative px-2">Log in</button>
+                    <button type="submit" className="mt-4 bg-slate-600 text-white relative px-2">Kirjaudu sisään</button>
 
                 </form>
             </div>

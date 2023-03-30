@@ -58,7 +58,6 @@ const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAct
 
     const addRecipeHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log("pressed")
         if (recipe.ingredients.length === 0) {
             toast("Lisää vähintään yksi raaka-aine!")
             return
@@ -116,7 +115,7 @@ const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAct
                 <input type="file" onChange={(e) => handleImageChange(e)} accept="image/*" />
                 <div className="flex justify-between px-5">
                     <Button type="submit" className="text-sm p-1 bg-slate-300 rounded-md" text={"Lisää resepti"} />
-                    <Button onClick={() => setShowRecipeForm(false)} text={"Peruuta"} icon={backIcon}/>
+                    <Button onClick={() => setShowRecipeForm(false)} text={"Peruuta"} icon={backIcon} />
                 </div>
             </form>
         </div>

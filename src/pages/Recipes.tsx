@@ -62,11 +62,19 @@ const Recipes = () => {
     const [showRecipeForm, setShowRecipeForm] = useState(false)
     const [page, setPage] = useState<number>(0)
 
-    const { isLoading, error, isSuccess } = useQuery({
+    const { isLoading, isError, isSuccess } = useQuery({
         queryKey: ["recipeData"],
         queryFn: getAllRecipes,
         onSuccess: (data) => {
-            setRecipes(data)
+            if (data.length > 0) {
+                setRecipes(data)
+            } else {
+                setRecipes([])
+            }
+
+        },
+        onError: (error) => {
+            console.error(error)
         }
     })
 
@@ -102,9 +110,7 @@ const Recipes = () => {
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)
     }
-
-
-
+    console.log(isError)
     return (
         <section className="w-[70%] h-full flex flex-col animate-fadeIn relative  mb-10 min-h-[500px] ">
             {showRecipeForm ? <RecipeForm setShowRecipeForm={setShowRecipeForm} /> : ""}
@@ -118,8 +124,8 @@ const Recipes = () => {
 
             <div className="flex flex-col justify-between h-[650px] mt-10">
                 <div className={` grid-cols-2 grid gap-2 pb-2 md:grid-cols-4 lg:grid-cols-5 ${selectedRecipe ? "brightness-75" : ""}`}>
-                    {isLoading ? <h2 className='text-center absolute w-[100%] mt-10 text-lg'>Loading recipes</h2> : filteredRecipes.length === 0 && !isLoading ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute" >Ei reseptejä hakusanoilla</h1>
-                        : isLoading ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute">Haetaan reseptejä...</h1> : filteredRecipes.map((recipe, i) => (
+                    {isLoading ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute">Haetaan reseptejä...</h1> : isError ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute">Virhe haettaessa reseptejä</h1>
+                        : filteredRecipes.length === 0 && !isLoading ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute" >Ei reseptejä hakusanoilla</h1> : filteredRecipes.map((recipe, i) => (
                             <Recipe data={recipe} key={i} setSelectedRecipe={setSelectedRecipe} />
                         ))}
 

@@ -18,6 +18,7 @@ export const loginToServer = async (credentials: UserCredentials) => {
         return data
     } catch (error: any) {
         console.error(error)
+        throw new Error("Failed to log in")
     }
 }
 

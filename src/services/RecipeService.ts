@@ -9,6 +9,7 @@ export const getAllRecipes = async () => {
         return data
     } catch (error) {
         console.error("Error fetching data from server")
+        throw new Error("Error fetching recipes")
     }
 }
 
@@ -19,6 +20,7 @@ export const getRecipe = async (recipeId: string) => {
         return data
     } catch (error) {
         console.error("Error fetching data from server")
+        return {}
     }
 }
 
@@ -63,7 +65,7 @@ export const deleteComment = async (commentId: string, recipeId: string) => {
         const data = await response.data
         return data
     } catch (error) {
-        console.error("Error adding recipe to the server")
+        console.error("Error deleting comment")
     }
 }
 

@@ -30,7 +30,7 @@ const Register = () => {
           <input type="text" placeholder="Username" onChange={(e) => onChangeHandler(e)} className={inputStyles} name="name" />
           <input type="password" placeholder="Password" onChange={(e) => onChangeHandler(e)} className={inputStyles} name="password" />
           <input type="password" placeholder="Confirm password" onChange={(e) => onChangeHandler(e)} className={inputStyles} name="passwordConfirmation" />
-          <button type="submit" className="mt-4 bg-slate-600 text-white relative px-2">Register</button>
+          <button type="submit" className="mt-4 bg-slate-600 text-white relative px-2">Rekisteröidy</button>
         </form>
       </div>
     </div>

@@ -27,7 +27,7 @@ const Comment: React.FC<{ data: IComment, recipeId: string }> = ({ data, recipeI
             <p className="mt-2 italic">{data.content}</p>
             <button className="p-1 bg-slate-300 my-2" onClick={() => {
                 deleteCommentMutation.mutate()
-            }}>Delete comment</button>
+            }}>Poista kommentti</button>
         </div>
     )
 }
