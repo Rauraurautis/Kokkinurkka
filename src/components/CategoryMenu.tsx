@@ -35,10 +35,10 @@ const CategoryMenu: React.FC<{ setSelectedCategories: React.Dispatch<React.SetSt
     };
 
     return (
-        <div className="dropdown-menu">
+        <div className="">
             <Button text={"Kategoria"} onClick={toggleDropdown} />
             {isOpen && (
-                <ul className="bg-slate-200 p-1.5 absolute rounded-md z-10">
+                <ul className="bg-slate-200 p-2 absolute rounded-md z-10 animate-fadeIn">
                     {categories.map((category) => (
                         <li key={category}>
                             <label className="flex space-x-1 items-center">

@@ -5,6 +5,7 @@ import logo from "../assets/logo.png"
 import { setAccessToken, setRefreshToken } from '../services/TokenService'
 import { useAuthStore } from '../store'
 import hamburger from "../assets/hamburger.png"
+import githublogo from "../assets/githublogo.png"
 import { useState } from 'react'
 
 const Index = () => {
@@ -36,11 +37,11 @@ const Index = () => {
                         : <><NavLink to="/login" className={linkStyle}>Kirjaudu</NavLink>
                             <NavLink to="/register" className={linkStyle}>Rekisteröidy</NavLink></>}
                 </ul>
-                <div className="absolute right-4 md:hidden">
+                <div className="absolute right-[50px] md:hidden">
                     <img src={hamburger} alt="" className="max-w-[50px] cursor-pointer hover:translate-y-[-2px]" onClick={() => setDropDownVisible(prev => !prev)} />
                 </div>
             </div>
-            <div className={`absolute right-0 text-center font-lobster p-1 ${dropDownVisible ? "visible" : "hidden"}`}>
+            <div className={`absolute right-0 text-center font-lobster p-1 ${dropDownVisible ? "visible" : "hidden"} md:hidden`}>
                 <ul className="flex flex-col space-y-2 text-xl bg-slate-300 p-2 rounded-md shadow-xl animate-fadeIn">
                     <NavLink to="/" >Etusivu</NavLink>
                     <NavLink to="/recipes" >Reseptit</NavLink>
@@ -51,11 +52,13 @@ const Index = () => {
                             <NavLink to="/register" >Rekisteröidy</NavLink></>}
                 </ul>
             </div>
+            <div className="w-[60px] absolute right-0 top-1 hover:animate-wiggle">
+                    <a href="https://github.com/Rauraurautis/" target="_blank"><img src={githublogo} alt="" /></a>
+                </div>
         </nav>
-        <div className="container mx-auto h-screen flex justify-center items-center pt-[150px] xl:max-w-[1280px] relative bg-white bg-opacity-20">
+        <div className="container mx-auto h-full min-h-screen flex justify-center items-center pt-[150px] xl:max-w-[1280px] relative bg-white bg-opacity-20">
             <Outlet />
             <ToastContainer className="absolute" position="bottom-left" hideProgressBar={true} />
-            <footer className="text-center absolute bottom-0"><a href="https://github.com/Rauraurautis/">Github</a></footer>
         </div>
 
     </>
