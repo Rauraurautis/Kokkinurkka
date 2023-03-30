@@ -1,0 +1,1 @@
+export const inputStyles = "bg-slate-800 text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5"
