@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { loginToServer } from '../services/AuthService'
 import { setAccessToken, setRefreshToken } from '../services/TokenService'
 import { useAuthStore, UserCredentials } from '../store'
+import Button from '../components/Button'
 
 type Tokens = {
     accessToken: string
@@ -49,11 +50,13 @@ const Login = () => {
 
     return (
         <div>
-            <div className="flex flex-col justify-center items-center text-center bg-slate-200 border-zinc-700 border-2 shadow-xl p-7 sm:p-10 mx-auto w-fit ">
-                <form onSubmit={(e) => loginHandler(e)} className="flex flex-col justify-center space-y-3 h-fit items-center text-center">
-                    <input type="text" placeholder="Email" onChange={(e) => onChangeHandler(e)} className="bg-slate-800 text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5" name="email" />
-                    <input type="password" placeholder="Password" onChange={(e) => onChangeHandler(e)} className="bg-slate-800 text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5" name="password" />
-                    <button type="submit" className="mt-4 bg-slate-600 text-white relative px-2">Kirjaudu sisään</button>
+            <div className="flex flex-col justify-center items-center text-center bg-slate-200 border-2 shadow-xl p-10 mx-auto w-fit rounded-2xl">
+                <form onSubmit={(e) => loginHandler(e)} className="flex flex-col justify-center space-y-10 h-fit items-center text-center">
+                    <div className="flex flex-col space-y-3">
+                        <input type="text" placeholder="Email" onChange={(e) => onChangeHandler(e)} className="bg-slate-800 text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5" name="email" />
+                        <input type="password" placeholder="Password" onChange={(e) => onChangeHandler(e)} className="bg-slate-800 text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5" name="password" />
+                    </div>
+                    <Button type="submit" className="mt-4 bg-slate-600 text-white relative px-2" text={"Kirjaudu sisään"} customStyles='mt-2' />
 
                 </form>
             </div>
