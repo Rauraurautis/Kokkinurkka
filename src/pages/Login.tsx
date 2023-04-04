@@ -49,18 +49,16 @@ const Login = () => {
     }
 
     return (
-        <div>
-            <div className="flex flex-col justify-center items-center text-center bg-slate-200 border-2 shadow-xl p-10 mx-auto w-fit rounded-2xl">
+            <div className="flex flex-col justify-center h-fit items-center text-center bg-slate-200 rounded-2xl border-2 shadow-xl p-10 mx-2">
                 <form onSubmit={(e) => loginHandler(e)} className="flex flex-col justify-center space-y-10 h-fit items-center text-center">
                     <div className="flex flex-col space-y-3">
-                        <input type="text" placeholder="Email" onChange={(e) => onChangeHandler(e)} className="bg-slate-800 text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5" name="email" />
-                        <input type="password" placeholder="Password" onChange={(e) => onChangeHandler(e)} className="bg-slate-800 text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5" name="password" />
+                        <input type="text" placeholder="Sähköposti" onChange={(e) => onChangeHandler(e)} className=" text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5" name="email" />
+                        <input type="password" placeholder="Salasana" onChange={(e) => onChangeHandler(e)} className=" text-white px-2 placeholder:text-white border-none focus:outline-none rounded text-center py-0.5" name="password" />
                     </div>
                     <Button type="submit" className="mt-4 bg-slate-600 text-white relative px-2" text={"Kirjaudu sisään"} customStyles='mt-2' />
 
                 </form>
             </div>
-        </div>
     )
 }
 

@@ -56,7 +56,7 @@ const Index = () => {
                     <a href="https://github.com/Rauraurautis/" target="_blank"><img src={githublogo} alt="" /></a>
                 </div>
         </nav>
-        <div className="container mx-auto h-full min-h-screen flex justify-center items-center pt-[150px] xl:max-w-[1280px] relative bg-white bg-opacity-20">
+        <div className="container mx-auto h-full min-h-screen flex justify-center items-center xl:max-w-[1280px] relative bg-white bg-opacity-20">
             <Outlet />
             <ToastContainer className="absolute" position="bottom-left" hideProgressBar={true} />
         </div>

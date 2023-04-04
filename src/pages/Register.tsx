@@ -24,7 +24,6 @@ const Register = () => {
   }
 
   return (
-    <div>
       <div className="flex flex-col justify-center h-fit items-center text-center bg-slate-200 rounded-2xl border-2 shadow-xl p-10 mx-2 ">
         <form onSubmit={(e) => registerHandler(e)} className="flex flex-col space-y-10 items-center text-center">
           <div className="flex flex-col space-y-3">
@@ -36,7 +35,6 @@ const Register = () => {
           <Button type="submit" text={"Rekisteröidy"} />
         </form>
       </div>
-    </div>
   )
 }
 
