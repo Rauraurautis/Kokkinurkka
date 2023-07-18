@@ -5,6 +5,7 @@ import instance from "./TokenService";
 export const getAllRecipes = async () => {
     try {
         const response = await instance.get("/api/recipes")
+
         const data = await response.data
         return data
     } catch (error) {
@@ -30,7 +31,8 @@ export const addRecipe = async (body: RecipeInput | FormData) => {
         const data = await response.data
         return data
     } catch (error: any) {
-        console.log(error.response)
+        console.error(error.response)
+        throw new Error(error.response.data.issues[0].message)
     }
 }
 
@@ -40,7 +42,7 @@ export const removeRecipe = async (recipeId: string) => {
         const data = await response.data
         return data
     } catch (error: any) {
-        console.log(error.response)
+        console.error(error.response)
     }
 }
 

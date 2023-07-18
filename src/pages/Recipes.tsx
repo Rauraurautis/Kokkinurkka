@@ -10,6 +10,7 @@ import arrowright from "../assets/arrowright.png"
 import arrowLeft from "../assets/arrowleft.png"
 import Button from '../components/Button'
 import CategoryMenu from '../components/CategoryMenu'
+import { useParams } from 'react-router-dom'
 
 export interface Ingredient {
     name: string
@@ -34,16 +35,11 @@ type BufferData = {
     data: Uint8Array
 }
 
-type ImageProps = {
-    data: BufferData;
-    contentType: string;
-};
-
 export interface IRecipe {
     name: string
     description: string
     instructions: string
-    image: ImageProps | null
+    image: string
     ingredients: Ingredient[]
     comments: IComment[]
     _id: string
@@ -62,7 +58,7 @@ const Recipes = () => {
     const [showRecipeForm, setShowRecipeForm] = useState(false)
     const [page, setPage] = useState<number>(0)
 
-    const { isLoading, isError, isSuccess } = useQuery({
+    const { isLoading, isError } = useQuery({
         queryKey: ["recipeData"],
         queryFn: getAllRecipes,
         onSuccess: (data) => {
@@ -75,7 +71,8 @@ const Recipes = () => {
         },
         onError: (error) => {
             console.error(error)
-        }
+        },
+        staleTime: 10000
     })
 
     useEffect(() => {
@@ -110,9 +107,9 @@ const Recipes = () => {
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)
     }
-    console.log(isError)
+
     return (
-        <section className="w-[70%] h-full flex flex-col animate-fadeIn relative  mb-10 min-h-[500px] ">
+        <section className="w-[70%] h-full flex flex-col animate-fadeIn relative pt-[50px] mb-10 min-h-[500px] ">
             {showRecipeForm ? <RecipeForm setShowRecipeForm={setShowRecipeForm} /> : ""}
             <div className="mb-3 flex justify-center items-center gap-5">
                 <input type="text" className="p-1 max-h-[25px]" placeholder="Hae nimellä" value={search} onChange={(e) => handleSearch(e)} />
@@ -122,7 +119,7 @@ const Recipes = () => {
 
             <RecipeInfo setSelectedRecipe={setSelectedRecipe} recipe={selectedRecipe} selectedRecipe={selectedRecipe} />
 
-            <div className="flex flex-col justify-between h-[650px] mt-10">
+            <div className="flex flex-col justify-between h-[650px] mt-10 min-w-[200px]">
                 <div className={` grid-cols-2 grid gap-2 pb-2 md:grid-cols-4 lg:grid-cols-5 ${selectedRecipe ? "brightness-75" : ""}`}>
                     {isLoading ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute">Haetaan reseptejä...</h1> : isError ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute">Virhe haettaessa reseptejä</h1>
                         : filteredRecipes.length === 0 && !isLoading ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute" >Ei reseptejä hakusanoilla</h1> : filteredRecipes.map((recipe, i) => (

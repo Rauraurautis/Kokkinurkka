@@ -16,19 +16,8 @@ const RecipeInfo: React.FC<{ recipe: IRecipe | null, setSelectedRecipe: React.Di
     const [comment, setComment] = useState<Comment>({ content: "" })
     const { user, setUser } = useAuthStore(state => ({ user: state.user, setUser: state.login }))
     const infoRef = useRef<HTMLDivElement>(null);
-    const [imgSrc, setImgSrc] = useState("")
     const queryClient = useQueryClient()
 
-    
-    useEffect(() => {
-        if (recipe && recipe.image) {
-            let base64String = fromByteArray(recipe.image.data.data)
-            setImgSrc(prev => `data:image/png;base64,${base64String}`)
-        } else {
-            setImgSrc(prev => "")
-        }
-    }, [selectedRecipe])
-    
 
 
     useEffect(() => {
@@ -97,7 +86,7 @@ const RecipeInfo: React.FC<{ recipe: IRecipe | null, setSelectedRecipe: React.Di
                         <h1 className="uppercase mt-5 font-semibold font-sans break-all text-center">{recipe.name}</h1>
                         <h2 className="w-[90%] text-center">{recipe.description}</h2>
                     </div>
-                    <img src={recipe.image ? imgSrc : placeholder} className="max-w-[60%]" alt="Image" />
+                    <img src={`http://localhost:1337/image/${recipe.image}`} className="max-w-[60%]" alt="Image" />
                     <ul className="min-w-[60%]  p-2 ">
                         {recipe.ingredients.map((ingredient, i) => (
                             <li key={i} className="flex  justify-between odd:bg-slate-400 even: bg-slate-100 px-1 "><p>{ingredient.name}</p><p>{ingredient.amount} {ingredient.unit}</p></li>

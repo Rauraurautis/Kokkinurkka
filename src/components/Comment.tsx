@@ -11,7 +11,7 @@ const Comment: React.FC<{ data: IComment, recipeId: string }> = ({ data, recipeI
             await toast.promise(deleteComment(data._id, recipeId), {
                 pending: "Removing comment...",
                 success: "Comment removed!",
-                error: "Error deleting comment"
+                error: "Error deleting comment!"
             })
         },
         onSuccess: async (data) => {

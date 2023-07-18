@@ -19,7 +19,8 @@ const instance = axios.create({
 
 export const getToken = () => {
     const token = localStorage.getItem("access-token")
-    if (typeof token === "string") return token
+
+    if (typeof token === "string") { return token }
     return ""
 }
 
@@ -33,19 +34,29 @@ export const setRefreshToken = (token: string) => {
 
 const isTokenExpired = () => {
     if (getToken()) {
-        const decoded: tokenPayload = jwtDecode(getToken() as string)
-        return decoded.exp < new Date().getTime() / 1000
+        try {
+            const decoded: tokenPayload = jwtDecode(getToken() as string)
+            return decoded.exp < new Date().getTime() / 1000
+        } catch (err) {
+            console.error(err)
+        }
+
+
     }
 }
 
 const getRefreshedToken = async () => {
-    const result = await axios.get("http://localhost:1337/refresh", { headers: { "x-refresh": localStorage.getItem("refresh-token") } })
-    return result
+    try {
+        const result = await axios.get("http://localhost:1337/refresh", { headers: { "x-refresh": localStorage.getItem("refresh-token") } })
+        return result.data
+    } catch (error: any) {
+        console.error(error.message)
+    }
+
 }
 
 const newAccessToken = async () => {
-    const request = await getRefreshedToken()
-    const data = await request.data
+    const data = await getRefreshedToken()
     if (typeof data.token === "string") {
         setAccessToken(data.token)
         return data.token

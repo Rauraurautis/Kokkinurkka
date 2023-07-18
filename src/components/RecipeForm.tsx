@@ -27,15 +27,15 @@ const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAct
     const queryClient = useQueryClient()
     const addRecipeMutation = useMutation({
         mutationFn: async (data: FormData) => {
-            try {
-                await addRecipe(data)
-            } catch (error: any) {
-                console.error(error)
-            }
+            await addRecipe(data)
         },
         onSuccess: async (data) => {
             queryClient.invalidateQueries(["recipeData"])
             toast.success("Resepti lisätty!")
+            setShowRecipeForm(false)
+        },
+        onError: async (error: any) => {
+            toast.error(error.toString())
         }
     })
 
@@ -70,6 +70,17 @@ const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAct
         } else if (recipe.instructions === "") {
             toast("Resepti vaatii ohjeet!")
             return
+        } else if (recipe.category === "") {
+            toast("Resepti vaatii kategorian!")
+            return
+        }
+
+        if (recipe.image) {
+            if (recipe.image.size >= 1048576) {
+                toast("Maksimikoko kuvalle on 1MB!")
+                return
+            }
+
         }
         const formData = new FormData()
         formData.append('recipe', JSON.stringify(recipe));
@@ -77,7 +88,6 @@ const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAct
             formData.append('image', recipe.image);
         }
         addRecipeMutation.mutate(formData)
-        setShowRecipeForm(false)
 
     }
 
@@ -112,7 +122,7 @@ const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAct
 
                 <textarea placeholder="Reseptin ohjeet" rows={4} minLength={20} name="instructions" className="p-0.5" onChange={(e) => handleRecipeChange(e)} />
                 <label>Kuva</label>
-                <input type="file" onChange={(e) => handleImageChange(e)} accept="image/*" />
+                <input type="file" onChange={(e) => handleImageChange(e)} accept="image/*" name="image" />
                 <div className="flex justify-between px-5">
                     <Button type="submit" className="text-sm p-1 bg-slate-300 rounded-md" text={"Lisää resepti"} />
                     <Button onClick={() => setShowRecipeForm(false)} text={"Peruuta"} icon={backIcon} />

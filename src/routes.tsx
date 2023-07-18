@@ -5,6 +5,7 @@ import Profile from "./pages/Profile";
 import Recipes from "./pages/Recipes";
 import Register from "./pages/Register";
 import IndexPage from "./pages/IndexPage";
+import SingleRecipe from "./pages/SingleRecipe";
 
 
 
@@ -20,11 +21,12 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/login",
-                element: <Login />
+                element: <Login />,
             },
             {
-                path: "/recipes",
-                element: <Recipes />
+                path: "recipes",
+                element: <Recipes />,
+                
             },
             {
                 path: "/register",
@@ -33,7 +35,11 @@ export const router = createBrowserRouter([
             {
                 path: "/profile",
                 element: <Profile />
-            }
+            },
+            {
+                path: "/recipe/:id",
+                element: <SingleRecipe />
+            },
         ]
     }
 
