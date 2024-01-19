@@ -15,10 +15,9 @@ export type Comment = {
 const RecipeInfo: React.FC<{ recipe: IRecipe | null, setSelectedRecipe: React.Dispatch<React.SetStateAction<IRecipe | null>>, selectedRecipe?: IRecipe | null }> = ({ recipe, setSelectedRecipe, selectedRecipe }) => {
     const [comment, setComment] = useState<Comment>({ content: "" })
     const { user, setUser } = useAuthStore(state => ({ user: state.user, setUser: state.login }))
+    const { csrfToken } = useAuthStore(state => ({ csrfToken: state.csrfToken }))
     const infoRef = useRef<HTMLDivElement>(null);
     const queryClient = useQueryClient()
-
-
 
     useEffect(() => {
 
@@ -36,7 +35,7 @@ const RecipeInfo: React.FC<{ recipe: IRecipe | null, setSelectedRecipe: React.Di
 
 
     const addCommentMutation = useMutation({
-        mutationFn: async () => await commentRecipe(comment, recipe!._id),
+        mutationFn: async () => await commentRecipe(comment, recipe!._id, csrfToken),
         onSuccess: async (data) => {
             queryClient.invalidateQueries(["recipeData"])
             queryClient.invalidateQueries(["personalData"])
@@ -45,7 +44,7 @@ const RecipeInfo: React.FC<{ recipe: IRecipe | null, setSelectedRecipe: React.Di
     })
 
     const removeRecipeMutation = useMutation({
-        mutationFn: async () => await removeRecipe(recipe!._id),
+        mutationFn: async () => await removeRecipe(recipe!._id, csrfToken),
         onSuccess: async (data) => {
             queryClient.invalidateQueries(["recipeData"])
             queryClient.invalidateQueries(["personalData"])
@@ -86,7 +85,7 @@ const RecipeInfo: React.FC<{ recipe: IRecipe | null, setSelectedRecipe: React.Di
                         <h1 className="uppercase mt-5 font-semibold font-sans break-all text-center">{recipe.name}</h1>
                         <h2 className="w-[90%] text-center">{recipe.description}</h2>
                     </div>
-                    <img src={`http://localhost:1337/image/${recipe.image}`} className="max-w-[60%]" alt="Image" />
+                    <img src={recipe.image ? `https://d1l7zpp9jd00vm.cloudfront.net/${recipe.image}` : ""} className="max-w-[60%]" alt="Image" />
                     <ul className="min-w-[60%]  p-2 ">
                         {recipe.ingredients.map((ingredient, i) => (
                             <li key={i} className="flex  justify-between odd:bg-slate-400 even: bg-slate-100 px-1 "><p>{ingredient.name}</p><p>{ingredient.amount} {ingredient.unit}</p></li>
@@ -99,10 +98,12 @@ const RecipeInfo: React.FC<{ recipe: IRecipe | null, setSelectedRecipe: React.Di
                             : <button className="p-1 m-2 bg-slate-400" onClick={() => favoriteRecipeMutation.mutate()}>Lisää suosikkeihin</button>
                     }
                 </div >
-                <div className={`min-w-[300px] max-w-[500px] max-h-[600px] bg-slate-300 flex flex-col space-y-3 items-center justify-center text-sm rounded-lg shadow-lg pt-5`}>
-                    {recipe.comments.length ? recipe.comments.map((comment, i) => (
-                        <Comment key={i} data={comment} recipeId={recipe._id} />
-                    )) : <p className="pb-5">No comments</p>}
+                <div className={`pt-5 min-w-[300px] max-w-[500px] max-h-[500px] overflow-y-auto bg-slate-300 flex flex-col space-y-3 items-center justify-center text-sm rounded-lg shadow-lg`}>
+                    <div className="break-words w-[200px] overflow-y-auto flex flex-col items-center gap-5">
+                        {recipe.comments.length ? recipe.comments.map((comment, i) => (
+                            <Comment key={i} data={comment} recipeId={recipe._id} />
+                        )) : <p className="pb-5">No comments</p>}
+                    </div>
                     {user ? <div className="flex flex-col">
                         <textarea className="p-1" minLength={10} rows={2} onChange={e => handleCommentChange(e)} value={comment.content} />
                         <button className="p-1 m-2 bg-slate-400" onClick={(e) => handlePostComment(e)}>Comment</button>

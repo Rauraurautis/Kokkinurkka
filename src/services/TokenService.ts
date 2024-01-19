@@ -13,7 +13,8 @@ type tokenPayload = {
 }
 
 const instance = axios.create({
-    baseURL: "http://localhost:1337"
+    baseURL: "http://localhost:1337",
+    withCredentials: true,
 }
 )
 
@@ -26,10 +27,6 @@ export const getToken = () => {
 
 export const setAccessToken = (token: string) => {
     localStorage.setItem("access-token", token)
-}
-
-export const setRefreshToken = (token: string) => {
-    localStorage.setItem("refresh-token", token)
 }
 
 const isTokenExpired = () => {
@@ -47,7 +44,7 @@ const isTokenExpired = () => {
 
 const getRefreshedToken = async () => {
     try {
-        const result = await axios.get("http://localhost:1337/refresh", { headers: { "x-refresh": localStorage.getItem("refresh-token") } })
+        const result = await axios.get("http://localhost:1337/refresh", { withCredentials: true })
         return result.data
     } catch (error: any) {
         console.error(error.message)

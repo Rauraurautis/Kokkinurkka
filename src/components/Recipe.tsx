@@ -3,7 +3,12 @@ import { IRecipe } from '../pages/Recipes'
 import placeholder from "../assets/placeholder.png"
 import { fromByteArray } from 'base64-js'
 
-const Recipe: React.FC<{ data: IRecipe, setSelectedRecipe: React.Dispatch<React.SetStateAction<IRecipe | null>> }> = ({ data, setSelectedRecipe }) => {
+interface RecipeProps<T> {
+    data: T;
+    setSelectedRecipe: (input: T) => void;
+}
+
+const Recipe: React.FC<RecipeProps<IRecipe>> = ({ data, setSelectedRecipe }) => {
 
 
 

@@ -25,19 +25,21 @@ export const getRecipe = async (recipeId: string) => {
     }
 }
 
-export const addRecipe = async (body: RecipeInput | FormData) => {
+export const addRecipe = async (body: RecipeInput | FormData, csrfToken: string) => {
     try {
-        const response = await instance.post("/api/recipes", body)
+        instance.defaults.headers.post['CSRF-Token'] = csrfToken
+        const response = await instance.post("/api/recipes", body, { withCredentials: true })
         const data = await response.data
         return data
     } catch (error: any) {
         console.error(error.response)
-        throw new Error(error.response.data.issues[0].message)
+        throw new Error(error.response.data.issues)
     }
 }
 
-export const removeRecipe = async (recipeId: string) => {
+export const removeRecipe = async (recipeId: string, csrfToken: string) => {
     try {
+        instance.defaults.headers.post['CSRF-Token'] = csrfToken
         const response = await instance.delete(`/api/recipes/${recipeId}`)
         const data = await response.data
         return data
@@ -46,8 +48,9 @@ export const removeRecipe = async (recipeId: string) => {
     }
 }
 
-export const commentRecipe = async (comment: Comment, recipeId: string) => {
+export const commentRecipe = async (comment: Comment, recipeId: string, csrfToken: string) => {
     try {
+        instance.defaults.headers.post['CSRF-Token'] = csrfToken
         const response = await instance.post(`/api/recipes/${recipeId}`, comment)
         const data = await response.data
         return data
@@ -61,9 +64,10 @@ export const commentRecipe = async (comment: Comment, recipeId: string) => {
     }
 }
 
-export const deleteComment = async (commentId: string, recipeId: string) => {
+export const deleteComment = async (commentId: string, recipeId: string, csrfToken: string) => {
     try {
-        const response = await instance.put(`/api/recipes/${recipeId}`, { commentId: commentId })
+        instance.defaults.headers.put['CSRF-Token'] = csrfToken
+        const response = await instance.put(`/api/recipes/${recipeId}`, { commentId: commentId }, {withCredentials: true})
         const data = await response.data
         return data
     } catch (error) {

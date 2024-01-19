@@ -1,17 +1,20 @@
 import { NavLink } from 'react-router-dom'
 import { Outlet } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
-import logo from "../assets/logo.png"
-import { setAccessToken, setRefreshToken } from '../services/TokenService'
 import { useAuthStore } from '../store'
-import hamburger from "../assets/hamburger.png"
-import githublogo from "../assets/githublogo.png"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Navbar from '../components/Navbar'
 
 const Index = () => {
 
+    const { csrfToken, setCsrfToken } = useAuthStore()
+
+    useEffect(() => {
+        axios.get("http://localhost:1337/csrf-token", {withCredentials: true}).then(res => {
+            setCsrfToken(res.data.csrfToken)
+        })
+    }, [])
 
     return (<>
         <Navbar />

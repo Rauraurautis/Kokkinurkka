@@ -44,7 +44,7 @@ export const registerUser = async (credentials: RegisterUserCredentials) => {
 
 export const getUser = async (userId: string) => {
     try {
-        const response = await instance.get(`/api/users/${userId}`)
+        const response = await instance.get(`/api/users/${userId}`, {withCredentials: true})
         const data = await response.data
         return data
     } catch (error: any) {

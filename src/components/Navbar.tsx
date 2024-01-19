@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import logo from "../assets/logo.png"
-import { setAccessToken, setRefreshToken } from '../services/TokenService'
+import { setAccessToken } from '../services/TokenService'
 import { useAuthStore } from '../store'
 import hamburger from "../assets/hamburger.png"
 import githublogo from "../assets/githublogo.png"
@@ -15,7 +15,6 @@ const Navbar = () => {
     const logOut = () => {
         toast.success("Logged out!")
         setAccessToken("")
-        setRefreshToken("")
         logout()
     }
 

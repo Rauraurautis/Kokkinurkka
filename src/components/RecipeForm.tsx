@@ -1,10 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Ingredient } from '../pages/Recipes'
 import { addRecipe } from '../services/RecipeService'
 import Button from './Button'
 import backIcon from "../assets/backIcon.svg"
+import axios from 'axios'
+import { useAuthStore } from '../store'
 
 export type Category = "alkupalat" | "pääruoat" | "keitot" | "juomat" | "pizzat" | "leivonnaiset" | "lisukkeet" | "leivät"
     | "salaatit" | "välipalat" | "kastikkeet" | "jälkiruoat" | ""
@@ -24,10 +26,11 @@ export type RecipeInput = {
 
 const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setShowRecipeForm }) => {
     const [recipe, setRecipe] = useState<RecipeInput>({ name: "", description: "", instructions: "", ingredients: [], image: null, category: "" })
+    const {csrfToken} = useAuthStore()
     const queryClient = useQueryClient()
     const addRecipeMutation = useMutation({
         mutationFn: async (data: FormData) => {
-            await addRecipe(data)
+            await addRecipe(data, csrfToken)
         },
         onSuccess: async (data) => {
             queryClient.invalidateQueries(["recipeData"])
@@ -38,6 +41,8 @@ const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAct
             toast.error(error.toString())
         }
     })
+
+   
 
 
     const handleRecipeChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLSelectElement>) => {
@@ -107,7 +112,7 @@ const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAct
                 <select className="text-center" name="category" onChange={e => handleRecipeChange(e)}>
                     <option value="">Valitse reseptin kategoria</option>
                     {categories.map(cat => (
-                        <option value={cat}>{cat}</option>
+                        <option value={cat} key={cat}>{cat}</option>
                     ))}</select>
                 <button type="button" className="text-sm p-1 bg-slate-300 rounded-md" onClick={addIngredient} >Lisää raaka-aine</button>
                 <ul className="space-y-1 flex flex-col items-center">

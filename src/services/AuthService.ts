@@ -11,9 +11,10 @@ export interface RegisterUserCredentials extends UserCredentials {
 }
 
 
-export const loginToServer = async (credentials: UserCredentials) => {
+export const loginToServer = async (credentials: UserCredentials, csrfToken: string) => {
     try {
-        const response = await instance.post(`/api/sessions`, credentials)
+        instance.defaults.headers.post['CSRF-Token'] = csrfToken
+        const response = await instance.post(`/api/sessions`, credentials, {withCredentials: true})
         const data = await response.data
         return data
     } catch (error: any) {
@@ -24,7 +25,7 @@ export const loginToServer = async (credentials: UserCredentials) => {
 
 export const refreshAccessToken = async (refreshToken: string) => {
     try {
-        const response = await instance.get(`/healthcheck`, { headers: { "x-refresh": refreshToken } })
+        const response = await instance.get(`/refresh`)
        
         const data = await response.data
         return data

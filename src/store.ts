@@ -20,22 +20,28 @@ type AuthStore = {
     userToken: string
     refreshToken: string
     loggedIn: boolean
+    csrfToken: string
     login: (token: string) => void
     logout: () => void
     validateToken: (token: string) => boolean
     setNewToken: (token: string) => void
+    setCsrfToken: (token: string) => void
 }
 
-type tokenPayload = {
+type TokenPayload = {
+    session: string
+    iat: number
+    exp: number
+    user: UserPayload
+}
+
+type UserPayload = {
     _id: string
     email: string
     name: string
     createdAt: string
     updatedAt: string
     __v: number
-    session: string
-    iat: number
-    exp: number
 }
 
 
@@ -46,11 +52,13 @@ const useAuthStore = create<AuthStore, [["zustand/persist", AuthStore]]>(
             userToken: getToken(),
             refreshToken: "",
             loggedIn: false,
+            csrfToken: "",
 
             login(token: string) {
-                const decodedToken: tokenPayload = jwtDecode(token)
+                const decodedToken: TokenPayload = jwtDecode(token)
+                console.log(decodedToken)
                 set(state => ({
-                    ...state, user: { user: decodedToken.name, email: decodedToken.email, id: decodedToken._id }, loggedIn: true
+                    ...state, user: { user: decodedToken.user.name, email: decodedToken.user.email, id: decodedToken.user._id }, loggedIn: true
                 }))
             },
             logout() {
@@ -60,7 +68,7 @@ const useAuthStore = create<AuthStore, [["zustand/persist", AuthStore]]>(
             },
             validateToken(token: string | null) {
                 if (token) {
-                    const decodedToken: tokenPayload = jwtDecode(token)
+                    const decodedToken: TokenPayload = jwtDecode(token)
                     const secondsNow = new Date().getTime() / 1000
                     return decodedToken.exp > secondsNow
                 }
@@ -69,6 +77,11 @@ const useAuthStore = create<AuthStore, [["zustand/persist", AuthStore]]>(
             setNewToken(token: string) {
                 set(state => ({
                     ...state, userToken: token
+                }))
+            },
+            setCsrfToken(token: string) {
+                set(state => ({
+                    ...state, csrfToken: token
                 }))
             }
 

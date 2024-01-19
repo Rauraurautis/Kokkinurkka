@@ -19,7 +19,7 @@ export const Profile = () => {
   const fetchUserData = async () => {
     if (user) {
       const userData = await getUser(user.id)
-      return userData
+      return userData 
     }
   }
 
@@ -75,7 +75,7 @@ export const Profile = () => {
           <h1 className="text-center font-bold bg-slate-300 mb-2">Omat reseptit</h1>
           <div className="grid-cols-2 md:grid-cols-4 grid max-h-[300px] overflow-y-auto space-x-2 min-h-[150px]">
             {ownRecipes.length > 0 ? ownRecipes.map(recipe => (
-             <Recipe key={recipe._id} data={recipe} setSelectedRecipe={setSelectedRecipe}/>
+              <Recipe key={recipe._id} data={recipe} setSelectedRecipe={setSelectedRecipe} />
             )) : ""}
           </div>
         </div>

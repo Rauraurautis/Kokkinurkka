@@ -16,6 +16,7 @@ const Register = () => {
       redirect("/about")
       toast(`Registered user ${credentials.name}. You may now log in.`)
       setCredentials({ email: "", password: "", passwordConfirmation: "", name: "" })
+      return redirect("/")
     }
   }
 
