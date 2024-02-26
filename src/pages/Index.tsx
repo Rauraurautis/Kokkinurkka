@@ -11,7 +11,7 @@ const Index = () => {
     const { csrfToken, setCsrfToken } = useAuthStore()
 
     useEffect(() => {
-        axios.get("http://localhost:1337/csrf-token", {withCredentials: true}).then(res => {
+        axios.get("https://kokkinurkka-backend.onrender.com/csrf-token", {withCredentials: true}).then(res => {
             setCsrfToken(res.data.csrfToken)
         })
     }, [])

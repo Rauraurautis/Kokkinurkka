@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import Recipe from '../components/Recipe'
 import RecipeForm, { Category } from '../components/RecipeForm'
@@ -10,7 +10,7 @@ import arrowright from "../assets/arrowright.png"
 import arrowLeft from "../assets/arrowleft.png"
 import Button from '../components/Button'
 import CategoryMenu from '../components/CategoryMenu'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 
 export interface Ingredient {
     name: string
@@ -57,6 +57,7 @@ const Recipes = () => {
     const [search, setSearch] = useState("")
     const [showRecipeForm, setShowRecipeForm] = useState(false)
     const [page, setPage] = useState<number>(0)
+    const [searchParams, setSearchParams] = useSearchParams()
 
     const { isLoading, isError } = useQuery({
         queryKey: ["recipeData"],
@@ -117,10 +118,10 @@ const Recipes = () => {
                 <Button text={"Uusi resepti"} onClick={() => handleNewRecipePress()} />
             </div>
 
-            <RecipeInfo setSelectedRecipe={setSelectedRecipe} recipe={selectedRecipe} selectedRecipe={selectedRecipe} />
+            <RecipeInfo setSelectedRecipe={setSelectedRecipe} recipe={selectedRecipe} selectedRecipe={selectedRecipe} setSearchParams={setSearchParams} />
 
             <div className="flex flex-col justify-between h-[650px] mt-10 min-w-[200px]">
-                <RecipeList selectedRecipe={selectedRecipe} setSelectedRecipe={setSelectedRecipe} filteredRecipes={filteredRecipes} isLoading={isLoading} isError={isError} />
+                <RecipeList selectedRecipe={selectedRecipe} setSelectedRecipe={setSelectedRecipe} filteredRecipes={filteredRecipes} isLoading={isLoading} isError={isError} setSearchParams={setSearchParams} searchParams={searchParams} />
                 {filteredRecipes.length === 0 ? "" : <div className="flex justify-between bottom-[0px] w-[100%] mb-20">
                     <button className={`w-[50px] bg-slate-300 p-2 rounded-xl ${page > 0 ? "bg-slate-300" : "bg-slate-600"}`} disabled={page > 0 ? false : true} onClick={() => setPage(prev => prev - 1)}><img src={arrowLeft} /></button>
                     <button className={`w-[50px] bg-slate-300 p-2 rounded-xl ${filteredRecipes.length < 15 ? "bg-slate-600" : "bg-slate-300"}`} onClick={() => setPage(prev => prev + 1)} disabled={filteredRecipes.length < 15 ? true : false}><img src={arrowright} /></button>
@@ -134,22 +135,39 @@ const Recipes = () => {
 export default Recipes
 
 
-type RecipeListProps<T> = {
-    selectedRecipe: T | null
-    setSelectedRecipe: (recipe: T) => void
-    filteredRecipes: T[]
+type RecipeListProps = {
+    selectedRecipe: IRecipe | null
+    setSelectedRecipe: (recipe: IRecipe) => void
+    filteredRecipes: IRecipe[]
     isLoading: boolean
     isError: boolean
+    searchParams: URLSearchParams
+    setSearchParams: Function
 }
 
-function RecipeList<T>({selectedRecipe, setSelectedRecipe, filteredRecipes, isLoading, isError}: RecipeListProps<IRecipe>) {
+const RecipeList: FC<RecipeListProps> = ({ selectedRecipe, setSelectedRecipe, filteredRecipes, isLoading, isError, searchParams, setSearchParams }) => {
+
+    const handleClick = (data: IRecipe) => {
+        setSelectedRecipe(data)
+        setSearchParams({ id: data._id })
+    }
+
+    useEffect(() => {
+        const recipeId = searchParams.get("id")
+        if (searchParams.get("id")) {
+            const recipe = filteredRecipes.find(recipe => recipe._id === recipeId)
+            console.log(filteredRecipes)
+            if (recipe) setSelectedRecipe(recipe)
+        }
+    }, [filteredRecipes])
+
     return (
         <div className={` grid-cols-2 grid gap-2 pb-2 md:grid-cols-4 lg:grid-cols-5 ${selectedRecipe ? "brightness-75" : ""}`}>
-                    {isLoading ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute">Haetaan reseptejä...</h1> : isError ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute">Virhe haettaessa reseptejä</h1>
-                        : filteredRecipes.length === 0 && !isLoading ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute" >Ei reseptejä hakusanoilla</h1> : filteredRecipes.map((recipe, i) => (
-                            <Recipe data={recipe} key={i} setSelectedRecipe={setSelectedRecipe} />
-                        ))}
+            {isLoading ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute">Haetaan reseptejä...</h1> : isError ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute">Virhe haettaessa reseptejä</h1>
+                : filteredRecipes.length === 0 && !isLoading ? <h1 className="text-center w-[100%] text-lg mt-10 font-semibold absolute" >Ei reseptejä hakusanoilla</h1> : filteredRecipes.map((recipe, i) => (
+                    <Recipe data={recipe} key={i} onClick={handleClick} />
+                ))}
 
-                </div>
+        </div>
     )
 }

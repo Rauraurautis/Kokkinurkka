@@ -13,14 +13,14 @@ type tokenPayload = {
 }
 
 const instance = axios.create({
-    baseURL: "http://localhost:1337",
+    baseURL: process.env.NODE_ENV === "development" ? "http://localhost:1337/" :  "https://kokkinurkka-backend.onrender.com/",
     withCredentials: true,
 }
 )
 
 export const getToken = () => {
     const token = localStorage.getItem("access-token")
-
+    console.log(process.env.NODE_ENV)
     if (typeof token === "string") { return token }
     return ""
 }
@@ -44,7 +44,7 @@ const isTokenExpired = () => {
 
 const getRefreshedToken = async () => {
     try {
-        const result = await axios.get("http://localhost:1337/refresh", { withCredentials: true })
+        const result = await axios.get("https://kokkinurkka-backend.onrender.com/refresh", { withCredentials: true })
         return result.data
     } catch (error: any) {
         console.error(error.message)
@@ -62,7 +62,7 @@ const newAccessToken = async () => {
 }
 
 
-instance.interceptors.request.use(async (req) => {
+/* instance.interceptors.request.use(async (req) => {
     if (isTokenExpired()) {
         const token = await newAccessToken()
         req.headers["Authorization"] = `Bearer ${token}`
@@ -71,6 +71,6 @@ instance.interceptors.request.use(async (req) => {
     const accessToken = getToken()
     req.headers["Authorization"] = `Bearer ${accessToken}`
     return req
-})
+}) */
 
 export default instance

@@ -26,7 +26,7 @@ export type RecipeInput = {
 
 const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setShowRecipeForm }) => {
     const [recipe, setRecipe] = useState<RecipeInput>({ name: "", description: "", instructions: "", ingredients: [], image: null, category: "" })
-    const {csrfToken} = useAuthStore()
+    const { csrfToken } = useAuthStore()
     const queryClient = useQueryClient()
     const addRecipeMutation = useMutation({
         mutationFn: async (data: FormData) => {
@@ -42,7 +42,7 @@ const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAct
         }
     })
 
-   
+
 
 
     const handleRecipeChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLSelectElement>) => {
@@ -87,10 +87,13 @@ const RecipeForm: React.FC<{ setShowRecipeForm: React.Dispatch<React.SetStateAct
             }
 
         }
+
+        const modifiedRecipe = { ...recipe, ingredients: recipe.ingredients[recipe.ingredients.length - 1].name === "" ? recipe.ingredients.slice(0, recipe.ingredients.length - 1) : recipe.ingredients }
+
         const formData = new FormData()
-        formData.append('recipe', JSON.stringify(recipe));
-        if (recipe.image) {
-            formData.append('image', recipe.image);
+        formData.append('recipe', JSON.stringify(modifiedRecipe));
+        if (modifiedRecipe.image) {
+            formData.append('image', modifiedRecipe.image);
         }
         addRecipeMutation.mutate(formData)
 

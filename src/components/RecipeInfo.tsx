@@ -12,7 +12,14 @@ export type Comment = {
     content: string
 }
 
-const RecipeInfo: React.FC<{ recipe: IRecipe | null, setSelectedRecipe: React.Dispatch<React.SetStateAction<IRecipe | null>>, selectedRecipe?: IRecipe | null }> = ({ recipe, setSelectedRecipe, selectedRecipe }) => {
+interface RecipeInfoProps {
+    recipe: IRecipe | null
+    setSelectedRecipe: React.Dispatch<React.SetStateAction<IRecipe | null>>
+    selectedRecipe?: IRecipe | null
+    setSearchParams?: Function
+}
+
+const RecipeInfo: React.FC<RecipeInfoProps> = ({ recipe, setSelectedRecipe, selectedRecipe, setSearchParams }) => {
     const [comment, setComment] = useState<Comment>({ content: "" })
     const { user, setUser } = useAuthStore(state => ({ user: state.user, setUser: state.login }))
     const { csrfToken } = useAuthStore(state => ({ csrfToken: state.csrfToken }))
@@ -29,6 +36,12 @@ const RecipeInfo: React.FC<{ recipe: IRecipe | null, setSelectedRecipe: React.Di
 
     const handleClickOutside = (e: MouseEvent) => {
         if (infoRef.current && e.target instanceof Node && !infoRef.current.contains(e.target)) {
+            if (setSearchParams) {
+                setSearchParams((params: any) => {
+                    params.delete("id")
+                    return params
+                })
+            }
             setSelectedRecipe(null);
         }
     };
@@ -76,11 +89,21 @@ const RecipeInfo: React.FC<{ recipe: IRecipe | null, setSelectedRecipe: React.Di
         addCommentMutation.mutate()
     }
 
+    const handleBackClick = () => {
+        if (setSearchParams) {
+            setSearchParams((params: any) => {
+                params.delete("id")
+                return params
+            })
+        }
+        setSelectedRecipe(null)
+    }
+
     return (
         <>
             {recipe ? <div ref={infoRef} className="inset-x-0 mx-auto mt-10 justify-center flex sm:space-x-5 z-[5] flex-col items-center sm:flex-row absolute animate-fadeIn">
                 <div className={`min-w-[300px] bg-slate-300 flex flex-col space-y-5 items-center text-sm relative rounded-lg shadow-lg mb-5 pb-2 max-h-[500px] overflow-y-auto max-w-[300px] lg:max-w-[400px] xl:max-w-[500px]`}>
-                    <div className="w-[90%] pt-2 absolute flex justify-between"><h3 className="font-bold">Tekijä: {recipe.author.name}</h3><button className="p-1  bg-slate-400" onClick={() => setSelectedRecipe(null)}>Takaisin</button></div>
+                    <div className="w-[90%] pt-2 absolute flex justify-between"><h3 className="font-bold">Tekijä: {recipe.author.name}</h3><button className="p-1  bg-slate-400" onClick={handleBackClick}>Takaisin</button></div>
                     <div className="flex flex-col justify-center items-center space-y-3 w-[80%]">
                         <h1 className="uppercase mt-5 font-semibold font-sans break-all text-center">{recipe.name}</h1>
                         <h2 className="w-[90%] text-center">{recipe.description}</h2>
